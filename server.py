@@ -18,7 +18,7 @@ def index():
 @app.route('/work', methods=['POST'])
 def work():
     data = request.json
-    work_name = time.strftime('%Y-%m-%d-%H-%M-%S', time.localtime(time.time()))
+    work_name = '{}.xlsx'.format(time.strftime('%Y-%m-%d-%H-%M-%S', time.localtime(time.time())))
     data['work'] = work_name
     queue.put(data)
     return jsonify(errCode=0, work=work_name)
@@ -26,9 +26,8 @@ def work():
 
 @app.route('/xlsx/<work_name>')
 def xlsx(work_name):
-    file_name = '{}.xlsx'.format(work_name)
     try:
-        return send_file('./xlsx/{}'.format(file_name))
+        return send_file('./xlsx/{}'.format(work_name))
     except FileNotFoundError:
         return Response("""
 <html>

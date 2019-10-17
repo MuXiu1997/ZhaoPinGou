@@ -99,4 +99,4 @@ def run(data):
         output.append(info)
 
     df = pd.DataFrame(output)
-    df.to_excel('./xlsx/{}.xlsx'.format(work_name))
+    df.to_excel('./xlsx/{}'.format(work_name))
