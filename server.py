@@ -40,8 +40,8 @@ def xlsx(work_name):
 
     function fun() {
       if (i === 0) {
-        location.reload();
         clearInterval(timer);
+        window.location.reload();
         return
       }
       document.getElementById("mes").innerHTML = `${i}`;
