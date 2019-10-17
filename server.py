@@ -70,4 +70,4 @@ def word(q):
 if __name__ == '__main__':
     pw = multiprocessing.Process(target=word, args=(queue,))
     pw.start()
-    app.run()
+    app.run('0.0.0.0')
