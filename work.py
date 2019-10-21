@@ -1,7 +1,7 @@
 import pandas as pd
 
 from api import (get_resume_list, get_resume_list_is_purchase, get_resume_id_is_purchase, get_resume_id, get_share_url,
-                 unlock_resume, get_city_id, get_folder_id, get_info)
+                 unlock_resume, get_city_id, get_folder_id, get_info, convert_balance)
 from auth import Token
 from log import logger
 from setting import DEGREES, GENDER
@@ -51,6 +51,8 @@ def run_by_gender(token, number, gender, query, folder_id, share_url_list):
                 is_purchase, share_url = get_share_url(token, resume_id)
                 print('is_purchase', is_purchase)
                 result, balance, free_count = unlock_resume(token, resume_id, folder_id)
+                if free_count < 100:
+                    convert_balance(token)
                 print(result, balance, free_count)
                 if result:
                     share_url_list.append(share_url)

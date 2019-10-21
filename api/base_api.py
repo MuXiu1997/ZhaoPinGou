@@ -29,7 +29,7 @@ class BaseApi(object):
     def run(self):
         while True:
             response = self.request()
-            logger.info(response.text)
+            # logger.info(response.text)
             try:
                 data = response.json()
                 if data.get('message') == '您的操作频繁，请稍后刷新再试' or data.get('errorCode') == 6:
