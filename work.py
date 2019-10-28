@@ -63,6 +63,23 @@ def run_by_gender(token, number, gender, query, folder_id, share_url_list):
         print(query['pageSize'])
 
 
+def distinguish_segments(info):
+    segment = ''
+    phone = info.get('电话')
+    if phone[:4] in ['1700', '1701', '1702'] or phone[:3] in ['133', '149', '153', '173', '177', '180', '181', '189',
+                                                              '199']:
+        segment = '电信'
+    if phone[:4] in ['1703', '1705', '1706'] or phone[:3] in ['134', '135', '136', '137', '138', '139', '147', '150',
+                                                              '151', '152', '157', '158', '159', '172', '178', '182',
+                                                              '183', '184', '187', '188', '198']:
+        segment = '移动'
+    if phone[:4] in ['1704', '1707', '1708', '1709'] or phone[:3] in ['130', '131', '132', '145', '155', '156', '166',
+                                                                      '171', '175', '176', '185', '186', '166']:
+        segment = '联通'
+
+    info['运营商'] = segment
+
+
 def run(data):
     work_name = data.pop('work')
 
@@ -97,6 +114,7 @@ def run(data):
 
     for share_url in share_url_list:
         info = get_info(token, share_url)
+        distinguish_segments(info)
         logger.info(info)
         output.append(info)
 
