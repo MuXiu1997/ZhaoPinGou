@@ -91,10 +91,11 @@ def run(data):
     woman_number = data.pop('womanNumber')
 
     city = data.pop('city')
-    city_query_list = city.split(' ')
-    city_list = [get_city_id(token, city_name) for city_name in city_query_list]
-    data['hopeAdressStr'] = ','.join([str(each_city[0]) for each_city in city_list])
-    data['regionName'] = ','.join([str(each_city[1]) for each_city in city_list])
+    # city_query_list = city.split(' ')
+    # city_list = [get_city_id(token, city_name) for city_name in city_query_list]
+    # data['hopeAdressStr'] = ','.join([str(each_city[0]) for each_city in city_list])
+    # data['regionName'] = ','.join([str(each_city[1]) for each_city in city_list])
+    data['cityId'], _ = get_city_id(token, city)
 
     # email = data.pop('email')
     data['startDegreesName'] = get_degrees_name(data.get('startDegrees'))
