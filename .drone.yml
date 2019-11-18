@@ -1,0 +1,27 @@
+kind: pipeline
+type: ssh
+name: default
+
+server:
+  host:
+    from_secret: host
+  user:
+    from_secret: user
+  password:
+    from_secret: password
+
+steps:
+  - name: build
+    commands:
+      - cp /etc/localtime .
+      - docker build -t zhao-pin-gou .
+  - name: run
+    commands:
+      - cd /root/docker_project/ZhaoPinGou
+      - docker-compose up -d
+    depends_on:
+      - build
+
+trigger:
+  branch:
+  - master
