@@ -1,10 +1,11 @@
-FROM python:3.7.4
+FROM python:3.7.5
 
 COPY . /app/
 
 WORKDIR /app
 
-RUN pip install -i https://pypi.tuna.tsinghua.edu.cn/simple -r requirements.txt
+RUN pip install --upgrade pip -i http://mirrors.aliyun.com/pypi/simple --trusted-host mirrors.aliyun.com && \
+pip install -i http://mirrors.aliyun.com/pypi/simple --trusted-host mirrors.aliyun.com -r requirements.txt
 
 EXPOSE 5000
 
