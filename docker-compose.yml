@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  ZhaoPinGou:
+    image: zhao-pin-gou
+    restart: always
+    volumes:
+      - /etc/localtime:/etc/localtime
+
+networks:
+  default:
+    external:
+      name: nginx-net

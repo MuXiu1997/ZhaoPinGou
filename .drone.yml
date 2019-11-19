@@ -13,10 +13,10 @@ server:
 steps:
   - name: build
     commands:
-      - cp /etc/localtime .
       - docker build -t zhao-pin-gou .
   - name: run
     commands:
+      - cp -f ./docker-compose.yml /root/docker_project/ZhaoPinGou/docker-compose.yml
       - cd /root/docker_project/ZhaoPinGou
       - docker-compose up -d
     depends_on:
