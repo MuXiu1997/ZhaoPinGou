@@ -1,10 +1,11 @@
-from api.base_api import BaseApi
+from builtins import NotImplementedError
 
-API = '/api/load_candidate_info_list_all'
+from api.base_api import BaseAPI
 
 
-def base_payload():
-    return dict(
+class FolderResumeListAPI(BaseAPI):
+    api = '/api/load_candidate_info_list_all'
+    payload = dict(
         pageSize=0,
         pageNo=1,
         keyStr='',
@@ -29,24 +30,30 @@ def base_payload():
         clientType=2
     )
 
+    def __init__(self, folder_id, page_on=None):
+        self.payload.update({'folderId': folder_id})
+        if page_on is not None:
+            self.payload.update({'pageNo': page_on})
+        super().__init__()
+
+    def handler(self):
+        raise NotImplementedError
+
+
+class FolderResumeListTotalAPI(FolderResumeListAPI):
+    def handler(self):
+        return self.data.get('total')
+
+
+class FolderResumeListWareHouseAPI(FolderResumeListAPI):
+    def handler(self):
+        return self.data.get('warehouseList')
+
 
 def get_folder_resume_list(token, folder_id):
-    payload = base_payload()
-    payload.update({'folderId': folder_id})
-    api = BaseApi(api=API, payload=payload, token=token)
-
-    def handler(data):
-        return data.get('total')
-
-    api.add_handler(handler)
-    total = api.run()
-
-    payload.update({'pageNo': total})
-    _api = BaseApi(api=API, payload=payload, token=token)
-
-    def _handler(data):
-        return data.get('warehouseList')
-
-    _api.add_handler(_handler)
-
-    return _api.run()
+    t = FolderResumeListTotalAPI(folder_id)
+    t.run(token)
+    total = t.handler()
+    wh = FolderResumeListWareHouseAPI(folder_id, total)
+    wh.run(token)
+    return wh.handler()

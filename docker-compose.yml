@@ -5,7 +5,8 @@ services:
     image: zhao-pin-gou
     restart: always
     volumes:
-      - /etc/localtime:/etc/localtime
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
 
 networks:
   default:

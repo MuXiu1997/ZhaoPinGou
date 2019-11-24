@@ -1,18 +1,28 @@
-from api.base_api import BaseApi
-
-API = '/api/zpg_find_resume_html_details'
+from api.base_api import BaseAPI
 
 
-def get_share_url(token, resume_id):
-    payload = {'resumeHtmlId': resume_id, 'keyStr': '', 'keyPositionName': '', 'tradeId': '', 'postionStr': '',
-               'jobId': 0, 'companyName': '', 'schoolName': '', 'clientNo': '', 'clientType': '2', }
+class DetailsAPI(BaseAPI):
+    api = '/api/zpg_find_resume_html_details'
 
-    api = BaseApi(api=API, payload=payload, token=token)
+    def __init__(self, resume_id):
+        self.payload = {'resumeHtmlId': resume_id, 'keyStr': '', 'keyPositionName': '', 'tradeId': '', 'postionStr': '',
+                        'jobId': 0, 'companyName': '', 'schoolName': '', 'clientNo': '', 'clientType': '2', }
+        super().__init__()
 
-    def handler(data):
-        is_purchase = data.get('isPurchase') == 1
-        share_url = data.get('shareUrl')
-        return is_purchase, share_url
+    def handler(self):
+        raise NotImplementedError
+        # is_purchase = self.data.get('isPurchase') == 1
+        # share_url = self.data.get('shareUrl')
+        # return is_purchase, share_url
 
-    api.add_handler(handler)
-    return api.run()
+
+class DetailsIsPurchase(DetailsAPI):
+    def handler(self):
+        is_purchase = self.data.get('isPurchase') == 1
+        return is_purchase
+
+
+def get_resume_is_purchase(token, resume_id):
+    su = DetailsIsPurchase(resume_id)
+    su.run(token)
+    return su.handler()

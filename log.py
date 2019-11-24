@@ -1,6 +1,7 @@
 import logging
 import os
 import time
+import traceback
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -23,3 +24,8 @@ stream_handler.setLevel(logging.DEBUG)
 
 logger.addHandler(file_handler)
 logger.addHandler(stream_handler)
+
+
+def error_handler(e):
+    _ = e
+    logger.error(traceback.format_exc())

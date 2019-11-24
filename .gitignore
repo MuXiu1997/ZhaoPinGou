@@ -128,4 +128,5 @@ logs/
 test.py
 *.xlsx
 .idea
+test/
 

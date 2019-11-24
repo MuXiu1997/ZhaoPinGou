@@ -1,4 +1,6 @@
 # 请求配置
+import os
+
 HEADERS = {
     'Sec-Fetch-Mode': "cors",
     'Sec-Fetch-Site': "same-origin",
@@ -63,3 +65,7 @@ CITY = {
     '成都市': 291,
 }
 
+# 项目根目录
+BASE_PATH = os.path.abspath(os.path.dirname(__file__))
+
+XLSX_PATH = os.path.join(BASE_PATH, 'xlsx')

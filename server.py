@@ -1,77 +1,20 @@
-import multiprocessing
-import time
-
-from flask import Flask, request, jsonify, render_template, send_file, Response
-
-from work import run
-
-app = Flask(__name__, static_url_path='', static_folder='./templates')
-
-queue = multiprocessing.Queue()
+import gunicorn.app.base
 
 
-@app.route('/')
-def index():
-    return render_template('index.html')
+class StandaloneApplication(gunicorn.app.base.BaseApplication):
+    def __init__(self, application, options=None):
+        self.options = options or {}
+        self.application = application
+        super().__init__()
 
+    def init(self, parser, opts, args):
+        super().init(parser, opts, args)
 
-@app.route('/ping')
-def ping():
-    return jsonify(msg='pong')
+    def load_config(self):
+        config = {key: value for key, value in self.options.items()
+                  if key in self.cfg.settings and value is not None}
+        for key, value in config.items():
+            self.cfg.set(key.lower(), value)
 
-
-@app.route('/work', methods=['POST'])
-def work():
-    data = request.json
-    work_name = '{}.xlsx'.format(time.strftime('%Y-%m-%d-%H-%M-%S', time.localtime(time.time())))
-    data['work'] = work_name
-    queue.put(data)
-    return jsonify(errCode=0, work=work_name)
-
-
-@app.route('/xlsx/<work_name>')
-def xlsx(work_name):
-    try:
-        return send_file('./xlsx/{}'.format(work_name))
-    except FileNotFoundError:
-        return Response("""
-<html>
-<head>
-  <script>
-    let i = 4;
-    let timer;
-    timer = setInterval("fun()", 1000);
-
-    function fun() {
-      if (i === 0) {
-        clearInterval(timer);
-        window.location.reload();
-        return
-      }
-      document.getElementById("mes").innerHTML = `${i}`;
-      i--;
-    }
-  </script>
-  <title></title>
-</head>
-<body>
-<div id="errorfrm">
-  <div>
-    <p>任务执行中，请稍候， <span id="mes">5</span> 秒钟后将刷新网页重试</p>
-  </div>
-
-</div>
-</body>
-</html>""")
-
-
-def word(q):
-    while True:
-        data = q.get(True)
-        run(data)
-
-
-if __name__ == '__main__':
-    pw = multiprocessing.Process(target=word, args=(queue,))
-    pw.start()
-    app.run('0.0.0.0')
+    def load(self):
+        return self.application

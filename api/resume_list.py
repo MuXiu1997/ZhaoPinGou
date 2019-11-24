@@ -1,53 +1,56 @@
-from api.base_api import BaseApi
+from api.base_api import BaseAPI
 
-API = '/api/find_warehouse_by_position_new'
 
-payload = dict()
-payload['pageSize'] = 0
-payload['pageNo'] = 25
-payload['keyStr'] = ''
-payload['companyName'] = ''
-payload['schoolName'] = ''
-payload['keyStrPostion'] = ''
-payload['postionStr'] = ''
-payload['startDegrees'] = -1
-payload['endDegress'] = -1
-payload['startAge'] = 0
-payload['endAge'] = 0
-payload['gender'] = -1
-payload['region'] = ''
-payload['timeType'] = -1
-payload['startWorkYear'] = -1
-payload['endWorkYear'] = -1
-payload['beginTime'] = ''
-payload['endTime'] = ''
-payload['isMember'] = 0
-payload['hopeAdressStr'] = ''
-payload['cityId'] = -1
-payload['updateTime'] = ''
-payload['tradeId'] = ''
-payload['startDegreesName'] = ''
-payload['endDegreesName'] = ''
-payload['tradeNameStr'] = ''
-payload['regionName'] = ''
-payload['isC'] = 1
-payload['is211_985_school'] = 0
-payload['clientNo'] = ''
-payload['clientType'] = 2
+class ResumeListAPI(BaseAPI):
+    api = '/api/find_warehouse_by_position_new'
+    payload = dict(
+        pageSize=0,
+        pageNo=25,
+        keyStr='',
+        companyName='',
+        schoolName='',
+        keyStrPostion='',
+        postionStr='',
+        startDegrees=-1,
+        endDegress=-1,
+        startAge=0,
+        endAge=0,
+        gender=-1,
+        region='',
+        timeType=-1,
+        startWorkYear=-1,
+        endWorkYear=-1,
+        beginTime='',
+        endTime='',
+        isMember=0,
+        hopeAdressStr='',
+        cityId=-1,
+        updateTime='',
+        tradeId='',
+        startDegreesName='',
+        endDegreesName='',
+        tradeNameStr='',
+        regionName='',
+        isC=1,
+        is211_985_school=0,
+        clientNo='',
+        clientType=2
+    )
+
+    def __init__(self, query=None):
+        if query is None:
+            query = dict()
+        self.payload.update(query)
+        super().__init__()
+
+    def handler(self):
+        return self.data.get('warehouseList'), self.data.get('resumeStr')
 
 
 def get_resume_list(token, query=None):
-    if query is None:
-        query = dict()
-    payload.update(query)
-    print(payload)
-    api = BaseApi(api=API, payload=payload, token=token)
-
-    def handler(data):
-        return data.get('warehouseList'), data.get('resumeStr')
-
-    api.add_handler(handler)
-    return api.run()
+    rl = ResumeListAPI(query)
+    rl.run(token)
+    return rl.handler()
 
 
 def get_resume_id(resume):

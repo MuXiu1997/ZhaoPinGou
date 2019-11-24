@@ -1,1 +1,180 @@
-<!DOCTYPE html><html lang=en><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1"><link rel=icon href=/favicon.ico><title>zhaopingouweb</title><link href=/css/app.05b0fd4b.css rel=preload as=style><link href=/css/chunk-vendors.3e61d19e.css rel=preload as=style><link href=/js/app.c25d57bc.js rel=preload as=script><link href=/js/chunk-vendors.1dfb489f.js rel=preload as=script><link href=/css/chunk-vendors.3e61d19e.css rel=stylesheet><link href=/css/app.05b0fd4b.css rel=stylesheet></head><body><noscript><strong>We're sorry but zhaopingouweb doesn't work properly without JavaScript enabled. Please enable it to continue.</strong></noscript><div id=app></div><script src=/js/chunk-vendors.1dfb489f.js></script><script src=/js/app.c25d57bc.js></script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>百知教育-招聘狗</title>
+  <script src="https://cdn.bootcss.com/vue/2.6.10/vue.min.js"></script>
+  <script src="https://cdn.bootcss.com/element-ui/2.12.0/index.js"></script>
+  <link href="https://cdn.bootcss.com/element-ui/2.12.0/theme-chalk/index.css" rel="stylesheet">
+</head>
+<body>
+<div id="app">
+  <el-card style="width: 600px;margin: 0 auto">
+    <el-form ref="form" :model="form" label-width="80px">
+      <el-form-item label="账号">
+        <el-input v-model="form.username" placeholder="请输入账号"></el-input>
+      </el-form-item>
+      <el-form-item label="密码">
+        <el-input v-model="form.password" show-password placeholder="请输入密码"></el-input>
+      </el-form-item>
+      <el-form-item label="城市">
+        <el-input v-model="form.city" placeholder="请输入城市"></el-input>
+      </el-form-item>
+      <el-form-item label="学历">
+        <el-col :span="11">
+          <el-select v-model="form.startDegrees" style="width: 100%;">
+            <el-option
+                v-for="degree in DEGREES"
+                v-bind="degree"
+                :key="degree">
+            </el-option>
+          </el-select>
+        </el-col>
+        <el-col class="line" :span="2">-</el-col>
+        <el-col :span="11">
+          <el-select v-model="form.endDegrees" style="width: 100%;">
+            <el-option
+                v-for="degree in DEGREES"
+                v-bind="degree"
+                :key="degree">
+            </el-option>
+          </el-select>
+        </el-col>
+      </el-form-item>
+      <el-form-item label="年龄">
+        <el-col :span="11">
+          <el-input v-model.number="form.startAge"></el-input>
+        </el-col>
+        <el-col class="line" :span="2">-</el-col>
+        <el-col :span="11">
+          <el-input v-model.number="form.endAge"></el-input>
+        </el-col>
+      </el-form-item>
+      <el-form-item label="工作经验">
+        <el-col :span="11">
+          <el-select v-model="form.startWorkYear" style="width: 100%;">
+            <el-option
+                v-for="year in WORK_YEAR"
+                v-bind="year"
+                :key="year">
+            </el-option>
+          </el-select>
+        </el-col>
+        <el-col class="line" :span="2">-</el-col>
+        <el-col :span="11">
+          <el-select v-model="form.endWorkYear" style="width: 100%;">
+            <el-option
+                v-for="year in WORK_YEAR"
+                v-bind="year"
+                :key="year">
+            </el-option>
+          </el-select>
+        </el-col>
+      </el-form-item>
+      <el-form-item label="男-女数量">
+        <el-col :span="11">
+          <el-input v-model.number="form.manNumber"></el-input>
+        </el-col>
+        <el-col class="line" :span="2">-</el-col>
+        <el-col :span="11">
+          <el-input v-model.number="form.womanNumber"></el-input>
+        </el-col>
+      </el-form-item>
+      <el-form-item label="简历类型">
+        <el-col :span="11">
+          <el-radio v-model="form.isMember" label="0" border style="width: 100%">初级简历</el-radio>
+        </el-col>
+        <el-col class="line" :span="2">-</el-col>
+        <el-col :span="11">
+          <el-radio v-model="form.isMember" label="1" border style="width: 100%">中高端简历</el-radio>
+        </el-col>
+      </el-form-item>
+    </el-form>
+    <div style="text-align: center">
+      <el-button type="primary" @click="submit">提交任务</el-button>
+    </div>
+  </el-card>
+</div>
+</body>
+<script>
+  new Vue({
+    el: '#app',
+    data() {
+      return {
+        DEGREES: [
+          {label: '不限', value: -1},
+          {label: '高中/中技/中专', value: 1},
+          {label: '大专', value: 2},
+          {label: '本科', value: 3},
+          {label: '硕士', value: 4},
+          {label: 'MBA', value: 5},
+          {label: '博士', value: 6},
+          {label: '及以上', value: 100}
+        ],
+        WORK_YEAR: [
+          {label: '不限', value: -1},
+          {label: '无经验', value: 0},
+          {label: '1年', value: 1},
+          {label: '2年', value: 2},
+          {label: '3年', value: 3},
+          {label: '4年', value: 4},
+          {label: '5年', value: 5},
+          {label: '及以上', value: 100}
+        ],
+        form: {
+          username: '',
+          password: '',
+          city: '',
+          startDegrees: -1,
+          endDegrees: -1,
+          startAge: 0,
+          endAge: 0,
+          startWorkYear: -1,
+          endWorkYear: -1,
+          manNumber: 0,
+          womanNumber: 0,
+          email: '',
+          isMember: '0'
+        }
+      }
+    },
+    methods: {
+      submit() {
+        const q = encodeURIComponent(JSON.stringify(this.form));
+        location.href = '/work?q=' + q;
+        //
+        // axios.post(`/work`, this.form)
+        //     .then(response => {
+        //       if (response.data['errCode'] === 0) {
+        //         Notification({
+        //           title: 'success',
+        //           message: '提交成功',
+        //           type: 'success'
+        //         })
+        //         location.href = `/xlsx/${response.data['work']}`
+        //       } else {
+        //         Notification({
+        //           title: 'error',
+        //           message: '提交失败，请联系相关人员',
+        //           type: 'error'
+        //         })
+        //       }
+        //     })
+        //     .catch(error => {
+        //       Notification({
+        //         title: 'error',
+        //         message: '提交失败，请联系相关人员',
+        //         type: 'error'
+        //       })
+        //       console.log(error)
+        //     })
+      }
+    }
+  })
+</script>
+<style>
+  .line {
+    text-align: center;
+  }
+</style>
+</html>

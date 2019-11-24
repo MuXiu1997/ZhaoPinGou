@@ -1,6 +1,6 @@
 import requests
 
-from log import logger
+from log import logger, error_handler
 from setting import BASE_URL, HEADERS
 from utils import create_timestamp_querystring
 
@@ -26,7 +26,7 @@ class Token(object):
             logger.info('自动登录成功')
             self.__token = user_token
         except Exception as e:
-            logger.error(e)
+            error_handler(e)
 
     def export(self):
         return self.__token, self.__session

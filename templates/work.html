@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>百知教育-招聘狗</title>
+  <script src="https://cdn.bootcss.com/vue/2.6.10/vue.min.js"></script>
+  <script src="https://cdn.bootcss.com/element-ui/2.12.0/index.js"></script>
+  <link href="https://cdn.bootcss.com/element-ui/2.12.0/theme-chalk/index.css" rel="stylesheet">
+  <script src="https://cdn.bootcss.com/axios/0.19.0/axios.min.js"></script>
+</head>
+<body>
+<div id="app">
+  <el-tag :type="type" effect="dark">
+    <i :class="icon"></i>
+    {{ tag }}
+  </el-tag>
+  <el-button size="medium" @click="download">
+    点击下载表格
+  </el-button>
+  <el-table :data="info_list">
+    <el-table-column
+        v-for="l in labels"
+        :prop="l"
+        :label="l"
+    />
+  </el-table>
+</div>
+
+<script>
+  new Vue({
+    el: "#app",
+    created() {
+      const m = location.href.match(/q=(.*)/);
+      if (m === null) {
+        location.href = "/";
+        return
+      }
+      const q = m[1];
+      const host = location.host;
+      const ws = new WebSocket(`ws://${host}/echo?q=${q}`);
+      let timer;
+      ws.onopen = () => {
+        timer = setInterval(() => {
+          ws.send(".")
+        }, 10000)
+      };
+      ws.onclose = () => {
+        clearInterval(timer)
+      };
+      ws.onmessage = (event) => {
+        const o = JSON.parse(event.data);
+        if (o.info !== undefined) {
+          this.info_list.push(o.info)
+        } else if (o.success !== undefined) {
+          this.tag = "任务完成";
+          this.type = "success";
+          this.icon = "el-icon-circle-check";
+        } else {
+          this.tag = "任务失败";
+          this.type = "danger";
+          this.icon = "el-icon-warning-outline";
+        }
+      };
+    },
+    data() {
+      return {
+        info_list: [],
+        tag: "任务进行中",
+        type: "",
+        icon: "el-icon-loading",
+        labels: [
+          "专业",
+          "姓名",
+          "学历",
+          "学校",
+          "年龄",
+          "性别",
+          "意向岗位",
+          "所在城市",
+          "电话",
+          "邮箱",
+          "运营商",
+        ]
+      }
+    },
+    methods: {
+      download() {
+        axios.post('/xlsx', {info_list: this.info_list})
+            .then(res => {
+              const downloadURL = `/xlsx/${res.data['xlsx_name']}`;
+              window.open(downloadURL)
+            })
+      }
+    }
+  })
+
+</script>
+</body>
+</html>
