@@ -20,6 +20,7 @@ if __name__ == '__main__':
         'bind': '{host}:{port}'.format(host='0.0.0.0', port=5000),
         'workers': number_of_workers(),
         'worker_class': 'geventwebsocket.gunicorn.workers.GeventWebSocketWorker',
+        'worker_tmp_dir': '/dev/shm',
     }
     server = StandaloneApplication(app, options)
     server.run()
